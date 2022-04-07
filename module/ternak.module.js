@@ -32,12 +32,12 @@ class _ternak{
 
 	updateternak(data, id_ternak){
 		const sql = {
-			query: `UPDATE d_ternak SET rf_id = ?, id_users = ?, jenis_kelamin = ?,
+			query: `UPDATE s_ternak SET rf_id = ?, id_users = ?, jenis_kelamin = ?,
 			 id_varietas = ?, berat_berkala = ?, suhu_berkala = ?, tanggal_lahir = ?, tanggal_masuk = ?, 
-			 id_induk = ?, id_pejantan = ?, status_sehat = ?, id_pakan = ?, fase_pemeliharaan = ?, 
+			 id_induk = ?, id_pejantan = ?, status_sehat = ?, id_pakan = ?, fase_pemeliharaan = ?,
 			 tanggal_keluar = ?, status_keluar = ?  WHERE id_ternak = ?`,
 			params: [data.rf_id, data.id_users, data.jenis_kelamin, data.id_varietas, data.berat, data.suhu,
-				data.tanggal_lahir, data.tanggal_masuk, data.id_induk, data.id_pejantan, data.status_sehat, 
+				data.tanggal_lahir, data.tanggal_masuk, data.id_induk, data.id_pejantan, data.status_sehat,
 				data.id_pakan, data.fase_pemeliharaan, data.tanggal_keluar, data.status_keluar, data.id_ternak]
 		}
 
@@ -61,10 +61,10 @@ class _ternak{
 
 	addternak(data){
 		const sql = {
-			query: `INSERT INTO s_ternak(rf_id, id_users, jenis_kelamin, id_varietas, berat_berkala,
+			query: `INSERT INTO s_ternak(id_ternak, rf_id, id_users, jenis_kelamin, id_varietas, berat_berkala,
 				 suhu_berkala, tanggal_lahir, tanggal_masuk, id_induk, id_pejantan, status_sehat,
-				  id_pakan, fase_pemeliharaan, tanggal_keluar, status_keluar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			params: [data.rf_id, data.id_users, data.jenis_kelamin, data.id_varietas, data.berat, data.suhu,
+				  id_pakan, fase_pemeliharaan, tanggal_keluar, status_keluar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			params: [data.id_ternak, data.rf_id, data.id_users, data.jenis_kelamin, data.id_varietas, data.berat, data.suhu,
 				 data.tanggal_lahir, data.tanggal_masuk, data.id_induk, data.id_pejantan, data.status_sehat,
 				 data.id_pakan, data.fase_pemeliharaan, data.tanggal_keluar, data.status_keluar]
 		}
@@ -92,12 +92,19 @@ class _ternak{
 	getDetailternak(id_ternak){
 		const sql = {
 			query: `
-			SELECT
-				emp.id_ternak,
-				emp.nama,
-				emp.harga
-			FROM d_ternak emp
-			WHERE emp.id_ternak = ?`,
+				SELECT
+				ternak.id_ternak,
+				ternak.rf_id,
+				ternak.jenis_kelamin,
+				ternak.berat_berkala,
+				ternak.suhu_berkala,
+				ternak.tanggal_lahir,
+				IF(ternak.usia > 12, ternak.usia / 12, ternak.usia) usia,
+				IF(ternak.usia > 12, 0, 1) isMonth,
+				ternak.tanggal_masuk,
+				ternak.fase_pemeliharaan
+				FROM s_ternak ternak
+			WHERE trnk.id_ternak = ?`,
 			params: [id_ternak]
 		}
 
@@ -126,9 +133,20 @@ class _ternak{
 				query: `
                     SELECT
 						emp.id_ternak,
-						emp.nama,
-						emp.harga
-					FROM d_ternak emp
+						emp.rf_id,
+						emp.jenis_kelamin,
+						emp.berat_berkala,
+						emp.suhu_berkala,
+						emp.tanggal_lahir,
+						IF(emp.usia > 12, emp.usia / 12, emp.usia) usia,
+						IF(emp.usia > 12, 0, 1) isMonth,
+						emp.tanggal_masuk,
+						emp.fase_pemeliharaan,
+						emp.tanggal_keluar,
+						emp.status_keluar,
+						emp.status_sehat,
+						emp.id_pakan,
+						FROM s_ternak emp
 					WHERE 1`,
 				params: [],
 			};
