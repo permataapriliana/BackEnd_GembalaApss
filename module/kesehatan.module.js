@@ -127,7 +127,7 @@ class _kesehatan{
 			sql.params.push(id_kesehatan);
 		}
 
-		sql.query += ` ORDER BY emp.id_kesehatan ASCL`
+		sql.query += ` ORDER BY emp.id_kesehatan ASC`
 
 		return mysql.query(sql.query, sql.params)
 			.then(async data => {
