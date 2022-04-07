@@ -32,8 +32,8 @@ class _kesehatan{
 
 	updatekesehatan(data, id_kesehatan){
 		const sql = {
-			query: `UPDATE d_kesehatan SET nama_kesehatan = ? WHERE id_kesehatan = ?`,
-			params: [data.nama_kesehatan, data.id_kesehatan]
+			query: `UPDATE d_kesehatan SET id_ternak, penyakit, tgl_sakit = ? WHERE id_kesehatan = ?`,
+			params: [data.id_ternak, data.penyakit, data.tgl_sakit, data.id_kesehatan]
 		}
 
 		return mysql.query(sql.query, sql.params)
@@ -56,8 +56,8 @@ class _kesehatan{
 
 	addkesehatan(data){
 		const sql = {
-			query: `INSERT INTO d_kesehatan(id_kesehatan, nama_kesehatan ) VALUES (?, ?)`,
-			params: [data.id_kesehatan, data.nama_kesehatan ]
+			query: `INSERT INTO d_kesehatan(id_kesehatan, id_ternak, penyakit, tgl_sakit  ) VALUES (?, ?, ?, ?)`,
+			params: [data.id_kesehatan, data.id_ternak, data.penyakit, data.tgl_sakit, ]
 		}
 
 		return mysql.query(sql.query, sql.params)
@@ -85,7 +85,9 @@ class _kesehatan{
 			query: `
 			SELECT
 				emp.id_kesehatan,
-				emp.nama_kesehatan
+                emp.id_ternak,
+                emp.penyakit,
+                emp.tgl_sakit
 			FROM d_kesehatan emp
 			WHERE emp.id_kesehatan = ?`,
 			params: [id_kesehatan]
@@ -116,7 +118,9 @@ class _kesehatan{
 				query: `
                     SELECT
 						emp.id_kesehatan,
-						emp.nama_kesehatan
+                        emp.id_ternak,
+                        emp.penyakit,
+                        emp.tgl_sakit
 					FROM d_kesehatan emp
 					WHERE 1`,
 				params: [],
@@ -136,7 +140,9 @@ class _kesehatan{
 				for (let key in data) {
 					tmp.push({
 						id_kesehatan: data[key].id_kesehatan,
-						nama_kesehatan: data[key].nama_kesehatan,
+						id_ternak: data[key].id_ternak,
+                        penyakit: data[key].penyakit,
+                        tgl_sakit: data[key].tgl_sakit,
 					})
 				}
 
