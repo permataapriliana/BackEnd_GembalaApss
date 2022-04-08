@@ -5,11 +5,11 @@ const mysql = new(require(`${__class_dir}/mariadb.class.js`))(config.db);
 const __handler = require(__basedir + '/class/fileHandling.class.js');
 const handler = new __handler(__basedir + '/public/image/parts/');
 
-class _kandang{
-	deletekandang(id_kandang){
+class _kawin{
+	deletekawin(id_kawin){
 		const sql = {
-			query: `DELETE FROM d_kandang WHERE id_kandang = ?`,
-			params: [id_kandang]
+			query: `DELETE FROM d_kawin WHERE id_kawin = ?`,
+			params: [id_kawin]
 		}
 
 		return mysql.query(sql.query, sql.params)
@@ -20,7 +20,7 @@ class _kandang{
 				}
 			}).catch(error => {
 				if (debug) {
-					console.error('deletekandang Error:', error);
+					console.error('deletekawin Error:', error);
 				}
 
 				return {
@@ -30,10 +30,10 @@ class _kandang{
 			})
 	}
 
-	updatekandang(data, id_kandang){
+	updatekawin(data, id_kawin){
 		const sql = {
-			query: `UPDATE d_kandang SET nama_kandang = ? WHERE id_kandang = ?`,
-			params: [data.nama_kandang, data.id_kandang]
+			query: `UPDATE d_kawin SET id_ternak = ?, tanggal_kawin = ?, rf_id_pemancek = ? WHERE id_kawin = ?`,
+			params: [data.id_ternak, data.tanggal_kawin, data.rf_id_pemancek, data.id_kawin]
 		}
 
 		return mysql.query(sql.query, sql.params)
@@ -44,7 +44,7 @@ class _kandang{
 				}
 			}).catch(error => {
 				if(debug){
-					console.error('updatekandang Error:', error);
+					console.error('updatekawin Error:', error);
 				}
 
 				return {
@@ -54,10 +54,10 @@ class _kandang{
 			})
 	}
 
-	addkandang(data){
+	addkawin(data){
 		const sql = {
-			query: `INSERT INTO d_kandang(id_kandang, nama_kandang ) VALUES (?, ?)`,
-			params: [data.id_kandang, data.nama_kandang ]
+			query: `INSERT INTO d_kawin(id_kawin, id_ternak, tanggal_kawin, rf_id_pemancek) VALUES (?, ?, ?, ?)`,
+			params: [data.id_kawin, data.id_ternak, data.tanggal_kawin, data.rf_id_pemancek ]
 		}
 
 		return mysql.query(sql.query, sql.params)
@@ -68,7 +68,7 @@ class _kandang{
 				}
 			}).catch(error => {
 				if (debug) {
-					console.error('addkandang Error', error);
+					console.error('addkawin Error', error);
 				}
 
 				return {
@@ -80,15 +80,17 @@ class _kandang{
 
 	}
 
-	getDetailkandang(id_kandang){
+	getDetailkawin(id_kawin){
 		const sql = {
 			query: `
 			SELECT
-				emp.id_kandang,
-				emp.nama_kandang
-			FROM d_kandang emp
-			WHERE emp.id_kandang = ?`,
-			params: [id_kandang]
+				emp.id_kawin,
+                emp.id_ternak,
+                emp.tanggal_kawin,
+                emp.rf_id_pemancek
+			FROM d_kawin emp
+			WHERE emp.id_kawin = ?`,
+			params: [id_kawin]
 		}
 
 		return mysql.query(sql.query, sql.params)
@@ -100,7 +102,7 @@ class _kandang{
 			})
 			.catch(error => {
 				if(debug){
-					console.error('getDetailkandang Error:', error);
+					console.error('getDetailkawin Error:', error);
 				}
 
 				return {
@@ -110,23 +112,25 @@ class _kandang{
 			});
 	};
 
-	listkandang(options = {}){
-		const { id_kandang } = options
+	listkawin(options = {}){
+		const { id_kawin } = options
 		const sql = {
 				query: `
                     SELECT
-						emp.id_kandang,
-						emp.nama_kandang
-					FROM d_kandang emp`,
+						emp.id_kawin,
+                        emp.id_ternak,
+                        emp.tanggal_kawin,
+                        emp.rf_id_pemancek
+					FROM d_kawin emp`,
 				params: [],
 			};
 
-		if (id_kandang) {
-			sql.query += ` AND emp.id_kandang = ?`;
-			sql.params.push(id_kandang);
+		if (id_kawin) {
+			sql.query += ` AND emp.id_kawin = ?`;
+			sql.params.push(id_kawin);
 		}
 
-		sql.query += ` ORDER BY emp.id_kandang ASC`
+		sql.query += ` ORDER BY emp.id_kawin ASC`
 
 		return mysql.query(sql.query, sql.params)
 			.then(async data => {
@@ -134,21 +138,23 @@ class _kandang{
 
 				for (let key in data) {
 					tmp.push({
-						id_kandang: data[key].id_kandang,
-						nama_kandang: data[key].nama_kandang,
+						id_kawin: data[key].id_kawin,
+                        id_ternak: data[key].id_ternak,
+                        tanggal_kawin: data[key].tanggal_kawin,
+                        rf_id_pemancek: data[key].rf_id_pemancek
 					})
 				}
 
 				return {
 					status: true,
-					data: id_kandang ? tmp[0]:tmp
+					data: id_kawin ? tmp[0]:tmp
 				};
 			})
 			.catch(error => {
-				if (id_kandang && error.code == "EMPTY_RESULT") {
+				if (id_kawin && error.code == "EMPTY_RESULT") {
 					return {
 						status: false,
-						error: "Data id_kandang tidak ditemukan!"
+						error: "Data id_kawin tidak ditemukan!"
 					}
 				}
 
@@ -160,7 +166,7 @@ class _kandang{
 				}
 
 				if(debug){
-					console.error('kandang list Error:', error);
+					console.error('kawin list Error:', error);
 				}
 
 				return {
@@ -171,7 +177,7 @@ class _kandang{
 	};
 }
 
-module.exports = new _kandang();
+module.exports = new _kawin();
 
 
 

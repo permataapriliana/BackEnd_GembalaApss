@@ -131,23 +131,22 @@ class _ternak{
 		const { id_ternak } = options
 		const sql = {
 				query: `
-                    SELECT
-						emp.id_ternak,
-						emp.rf_id,
-						emp.jenis_kelamin,
-						emp.berat_berkala,
-						emp.suhu_berkala,
-						emp.tanggal_lahir,
-						IF(emp.usia > 12, emp.usia / 12, emp.usia) usia,
-						IF(emp.usia > 12, 0, 1) isMonth,
-						emp.tanggal_masuk,
-						emp.fase_pemeliharaan,
-						emp.tanggal_keluar,
-						emp.status_keluar,
-						emp.status_sehat,
-						emp.id_pakan,
-						FROM s_ternak emp
-					WHERE 1`,
+				SELECT 
+					emp.id_ternak, 
+					emp.rf_id,
+					emp.jenis_kelamin, 
+					emp.nama_varietas,
+					emp.berat_berkala, 
+					emp.suhu_berkala, 
+					emp.tanggal_lahir, 
+					emp.tanggal_masuk, 
+					emp.id_induk,
+					emp.id_pejantan,
+					emp.status,
+					emp.nama_pakan,
+					emp.fase_pemeliharaan
+				FROM s_ternak emp, d_pakan emp, d_varietas emp, d_kesehatan emp
+				WHERE d_pakan.id_pakan = s_ternak.id_pakan = s_ternak.id_varietas = d_varietas.id_varietas = d_kesehatan.id_kesehatan = s_ternak.id_kesehatan`,
 				params: [],
 			};
 
@@ -156,7 +155,7 @@ class _ternak{
 			sql.params.push(id_ternak);
 		}
 
-		sql.query += ` ORDER BY emp.harga DESC`
+		sql.query += ` ORDER BY emp.id_ternak DESC`
 
 		return mysql.query(sql.query, sql.params)
 			.then(async data => {
@@ -165,8 +164,16 @@ class _ternak{
 				for (let key in data) {
 					tmp.push({
 						id_ternak: data[key].id_ternak,
-						nama: data[key].nama,
-						harga:data[key].harga,
+						rf_id: data[key].rf_id,
+						jenis_kelamin: data[key].jenis_kelamin,
+						nama_varietas: data[key].nama_varietas,
+						berat_berkala: data[key].berat_berkala,
+						suhu_berkala: data[key].suhu_berkala,
+						tanggal_lahir: data[key].tanggal_lahir,
+						tanggal_masuk: data[key].tanggal_masuk,
+						id_induk: data[key].id_induk,
+						id_pejantan: data[key].id_pejantan,
+						fase_pemeliharaan: data[key].fase_pemeliharaan,
 					})
 				}
 
@@ -179,7 +186,7 @@ class _ternak{
 				if (id_ternak && error.code == "EMPTY_RESULT") {
 					return {
 						status: false,
-						error: "Data tid_ternakak ditemukan!"
+						error: "Data id_ternak tidak ditemukan!"
 					}
 				}
 
