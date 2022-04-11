@@ -104,7 +104,7 @@ class _ternak{
 				ternak.tanggal_masuk,
 				ternak.fase_pemeliharaan
 				FROM s_ternak ternak
-			WHERE trnk.id_ternak = ?`,
+			WHERE ternak.id_ternak = ?`,
 			params: [id_ternak]
 		}
 

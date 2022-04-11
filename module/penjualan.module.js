@@ -8,7 +8,7 @@ const handler = new __handler(__basedir + '/public/image/parts/');
 class _penjualan{
 	deletepenjualan(id_penjualan){
 		const sql = {
-			query: `DELETE FROM s_penjualan WHERE id_penjualan = ?`,
+			query: `DELETE FROM d_penjualan WHERE id_penjualan = ?`,
 			params: [id_penjualan]
 		}
 
@@ -32,8 +32,8 @@ class _penjualan{
 
 	updatepenjualan(data, id_penjualan){
 		const sql = {
-			query: `UPDATE s_penjualan SET id_cus = ?, id_produk = ?, jumlah = ?, id_stock = ?, tgl_penjualan = ?  WHERE id_penjualan = ?`,
-			params: [data.id_cus, data.id_produk, data.jumlah, data.id_stock, data.tgl_penjualan, data.id_penjualan]
+			query: `UPDATE d_penjualan SET id_users = ?, id_ternak = ?, total_berat = ?, total_harga = ?, tgl_penjualan = ?  WHERE id_penjualan = ?`,
+			params: [data.id_users, data.id_ternak, data.total_berat, data.total_harga, data.tgl_penjualan, data.id_penjualan]
 		}
 
 		return mysql.query(sql.query, sql.params)
@@ -56,8 +56,8 @@ class _penjualan{
 
 	addpenjualan(data){
 		const sql = {
-			query: `INSERT INTO s_penjualan(id_penjualan, id_cus, id_produk,  jumlah, id_stock, tgl_penjualan) VALUES (?, ?, ?, ?, ?, ?)`,
-			params: [data.id_penjualan, data.id_cus, data.id_produk, data.jumlah, data.id_stock, data.tgl_penjualan]
+			query: `INSERT INTO d_penjualan(id_penjualan, id_users, id_ternak,  total_berat, total_harga, tgl_penjualan) VALUES (?, ?, ?, ?, ?, ?)`,
+			params: [data.id_penjualan, data.id_users, data.id_ternak, data.total_berat, data.total_harga, data.tgl_penjualan]
 		}
 
 		return mysql.query(sql.query, sql.params)
@@ -85,12 +85,12 @@ class _penjualan{
 			query: `
 			SELECT
 				emp.id_penjualan,
-				emp.id_cus,
-                emp.id_produk,
-                emp.jumlah,
-				emp.id_stock,
+				emp.id_users,
+                emp.id_ternak,
+                emp.total_berat,
+				emp.total_harga,
                 emp.tgl_penjualan
-			FROM s_penjualan emp
+			FROM d_penjualan emp
 			WHERE emp.id_penjualan = ?`,
 			params: [id_penjualan]
 		}
@@ -120,12 +120,12 @@ class _penjualan{
 				query: `
                     SELECT
 						emp.id_penjualan,
-						emp.id_cus,
-                        emp.id_produk,
-                        emp.jumlah,
-						emp.id_stock,
+						emp.id_users,
+                        emp.id_ternak,
+                        emp.total_berat,
+						emp.total_harga,
                         emp.tgl_penjualan
-					FROM s_penjualan emp
+					FROM d_penjualan emp
 					WHERE 1`,
 				params: [],
 			};
@@ -135,7 +135,7 @@ class _penjualan{
 			sql.params.push(id_penjualan);
 		}
 
-		sql.query += ` ORDER BY emp.jumlah DESC`
+		sql.query += ` ORDER BY emp.total_berat DESC`
 
 		return mysql.query(sql.query, sql.params)
 			.then(async data => {
@@ -144,10 +144,10 @@ class _penjualan{
 				for (let key in data) {
 					tmp.push({
 						id_penjualan: data[key].id_penjualan,
-						id_cus: data[key].id_cus,
-						id_produk:data[key].id_produk,
-                        jumlah:data[key].jumlah,
-                        id_stock:data[key].id_stock,
+						id_users: data[key].id_users,
+						id_ternak:data[key].id_ternak,
+                        total_berat:data[key].total_berat,
+                        total_harga:data[key].total_harga,
                         tgl_penjualan:data[key].tgl_penjualan,
 					})
 				}
@@ -161,7 +161,7 @@ class _penjualan{
 				if (id_penjualan && error.code == "EMPTY_RESULT") {
 					return {
 						status: false,
-						error: "Data tid_penjualanak ditemukan!"
+						error: "Data penjualan tidak ditemukan!"
 					}
 				}
 
