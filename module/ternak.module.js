@@ -92,19 +92,29 @@ class _ternak{
 	getDetailternak(id_ternak){
 		const sql = {
 			query: `
-				SELECT
-				ternak.id_ternak,
-				ternak.rf_id,
-				ternak.jenis_kelamin,
-				ternak.berat_berkala,
-				ternak.suhu_berkala,
-				ternak.tanggal_lahir,
-				IF(ternak.usia > 12, ternak.usia / 12, ternak.usia) usia,
-				IF(ternak.usia > 12, 0, 1) isMonth,
-				ternak.tanggal_masuk,
-				ternak.fase_pemeliharaan
-				FROM s_ternak ternak
-			WHERE ternak.id_ternak = ?`,
+			SELECT
+			ternak.id_ternak,
+			ternak.jenis_kelamin,
+			ternak.berat_berkala,
+			ternak.suhu_berkala,
+			ternak.tanggal_lahir,
+			IF(ternak.usia > 12, ternak.usia / 12, ternak.usia) usia,
+			IF(ternak.usia > 12, 0, 1) isMonth,
+			ternak.tanggal_masuk,
+			ternak.fase_pemeliharaan
+		FROM (
+			SELECT
+				trnk.id_ternak,
+				trnk.jenis_kelamin,
+				trnk.berat_berkala,
+				trnk.suhu_berkala,
+				trnk.tanggal_lahir,
+				(SELECT TIMESTAMPDIFF(MONTH, trnk.tanggal_lahir, CURRENT_DATE())) usia,
+				trnk.tanggal_masuk,
+				trnk.fase_pemeliharaan
+			FROM s_ternak trnk
+		) ternak
+		`,
 			params: [id_ternak]
 		}
 
@@ -131,22 +141,28 @@ class _ternak{
 		const { id_ternak } = options
 		const sql = {
 				query: `
-				SELECT 
-					emp.id_ternak, 
-					emp.rf_id,
-					emp.jenis_kelamin, 
-					emp.nama_varietas,
-					emp.berat_berkala, 
-					emp.suhu_berkala, 
-					emp.tanggal_lahir, 
-					emp.tanggal_masuk, 
-					emp.id_induk,
-					emp.id_pejantan,
-					emp.status,
-					emp.nama_pakan,
-					emp.fase_pemeliharaan
-				FROM s_ternak emp, d_pakan emp, d_varietas emp, d_kesehatan emp
-				WHERE d_pakan.id_pakan = s_ternak.id_pakan = s_ternak.id_varietas = d_varietas.id_varietas = d_kesehatan.id_kesehatan = s_ternak.id_kesehatan`,
+				SELECT
+    ternak.id_ternak,
+    ternak.jenis_kelamin,
+    ternak.berat_berkala,
+    ternak.suhu_berkala,
+    ternak.tanggal_lahir,
+    IF(ternak.usia > 12, ternak.usia / 12, ternak.usia) usia,
+    IF(ternak.usia > 12, 0, 1) isMonth,
+    ternak.tanggal_masuk,
+    ternak.fase_pemeliharaan
+FROM (
+    SELECT
+        trnk.id_ternak,
+        trnk.jenis_kelamin,
+        trnk.berat_berkala,
+        trnk.suhu_berkala,
+        trnk.tanggal_lahir,
+        (SELECT TIMESTAMPDIFF(MONTH, trnk.tanggal_lahir, CURRENT_DATE())) usia,
+        trnk.tanggal_masuk,
+        trnk.fase_pemeliharaan
+    FROM s_ternak trnk
+) ternak`,
 				params: [],
 			};
 
