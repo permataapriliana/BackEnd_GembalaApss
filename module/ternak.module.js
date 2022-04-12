@@ -142,27 +142,27 @@ class _ternak{
 		const sql = {
 				query: `
 				SELECT
-    ternak.id_ternak,
-    ternak.jenis_kelamin,
-    ternak.berat_berkala,
-    ternak.suhu_berkala,
-    ternak.tanggal_lahir,
-    IF(ternak.usia > 12, ternak.usia / 12, ternak.usia) usia,
-    IF(ternak.usia > 12, 0, 1) isMonth,
-    ternak.tanggal_masuk,
-    ternak.fase_pemeliharaan
-FROM (
-    SELECT
-        trnk.id_ternak,
-        trnk.jenis_kelamin,
-        trnk.berat_berkala,
-        trnk.suhu_berkala,
-        trnk.tanggal_lahir,
-        (SELECT TIMESTAMPDIFF(MONTH, trnk.tanggal_lahir, CURRENT_DATE())) usia,
-        trnk.tanggal_masuk,
-        trnk.fase_pemeliharaan
-    FROM s_ternak trnk
-) ternak`,
+					ternak.id_ternak,
+					ternak.jenis_kelamin,
+					ternak.berat_berkala,
+					ternak.suhu_berkala,
+					ternak.tanggal_lahir,
+					IF(ternak.usia > 12, ternak.usia / 12, ternak.usia) usia,
+					IF(ternak.usia > 12, 0, 1) isMonth,
+					ternak.tanggal_masuk,
+					ternak.fase_pemeliharaan
+				FROM (
+					SELECT
+						trnk.id_ternak,
+						trnk.jenis_kelamin,
+						trnk.berat_berkala,
+						trnk.suhu_berkala,
+						trnk.tanggal_lahir,
+						(SELECT TIMESTAMPDIFF(MONTH, trnk.tanggal_lahir, CURRENT_DATE())) usia,
+						trnk.tanggal_masuk,
+						trnk.fase_pemeliharaan
+					FROM s_ternak trnk
+				) ternak`,
 				params: [],
 			};
 
