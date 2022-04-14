@@ -56,7 +56,7 @@ class _timbangan{
 
 	addtimbangan(data){
 		const sql = {
-			query: `INSERT INTO d_timbangan(id_timbangan, id_ternak, rf_id, berat_berkala, suhu_berkala, tanggal ) VALUES (?, ?, ?, ?, ?, ?)`,
+			query: `INSERT INTO d_timbangan(id_timbangan, id_ternak, rf_id, berat_berkala, suhu_berkala, tanggal ) VALUES (?, ?, ?, ?, ?, current_timestamp)`,
 			params: [data.id_timbangan, data.id_ternak, data.rf_id, data.berat_berkala, data.suhu_berkala, data.tanggal]
 		}
 
