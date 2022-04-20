@@ -89,54 +89,30 @@ class _ternak{
 
 	}
 
-	// getDetailternak(id_ternak){
-	// 	const sql = {
-	// 		query: `
-	// 		SELECT
-	// 		ternak.id_ternak,
-	// 		ternak.jenis_kelamin,
-	// 		ternak.berat_berkala,
-	// 		ternak.suhu_berkala,
-	// 		ternak.tanggal_lahir,
-	// 		IF(ternak.usia > 12, ternak.usia / 12, ternak.usia) usia,
-	// 		IF(ternak.usia > 12, 0, 1) isMonth,
-	// 		ternak.tanggal_masuk,
-	// 		ternak.fase_pemeliharaan
-	// 	FROM (
-	// 		SELECT
-	// 			trnk.id_ternak,
-	// 			trnk.jenis_kelamin,
-	// 			trnk.berat_berkala,
-	// 			trnk.suhu_berkala,
-	// 			trnk.tanggal_lahir,
-	// 			(SELECT TIMESTAMPDIFF(MONTH, trnk.tanggal_lahir, CURRENT_DATE())) usia,
-	// 			trnk.tanggal_masuk,
-	// 			trnk.fase_pemeliharaan
-	// 		FROM s_ternak trnk
-	// 	) ternak`,
-	// 		params: [id_ternak]
-	// 	}
-
 	getDetailternak(id_ternak){
 		const sql = {
 			query: `
 			SELECT 
-				id_ternak, 
-				jenis_kelamin, 
-				nama_varietas,
-				berat_berkala, 
-				suhu_berkala, 
-				tanggal_lahir,
-				IF(usia > 12, usia / 12, usia) usia,
-				IF(usia > 12, 0, 1) isMonth, 
-				tanggal_masuk, 
-				id_induk,
-				id_pejantan,
-				status_sehat,
-				nama_pakan,
-				fase_pemeliharaan
-			FROM s_ternak, d_pakan , d_varietas
-			WHERE d_pakan.id_pakan = s_ternak.id_pakan = s_ternak.id_varietas = d_varietas.id_varietas`,
+        	s_ternak.id_users,
+			s_ternak.id_ternak,
+			s_ternak.jenis_kelamin,
+			d_varietas.nama_varietas , 
+			s_ternak.berat_berkala, 
+			s_ternak.suhu_berkala, 
+			s_ternak.tanggal_lahir, 
+			timestampdiff(month, s_ternak.tanggal_lahir, curdate()) AS umur , 
+			s_ternak.tanggal_masuk, s_ternak.id_induk, s_ternak.id_pejantan, 
+			s_ternak.status_sehat, 
+			s_ternak.fase_pemeliharaan,
+            d_pakan.nama_pakan,
+			s_ternak.tanggal_keluar, 
+			s_ternak.status_keluar 
+			FROM s_ternak
+			LEFT JOIN d_varietas
+			ON s_ternak.id_varietas=d_varietas.id_varietas
+            LEFT JOIN d_pakan
+            ON s_ternak.id_pakan=d_pakan.id_pakan
+			WHERE s_ternak.id_ternak=?`,
 			params: [id_ternak]
 		}
 
@@ -159,41 +135,140 @@ class _ternak{
 			});
 	};
 
+	getDetailternakusers(id_users){
+		const sql = {
+			query: `
+			SELECT
+        	s_ternak.id_users,
+			s_ternak.id_ternak,
+            s_ternak.rf_id,
+			s_ternak.jenis_kelamin,
+			d_varietas.nama_varietas , 
+			s_ternak.berat_berkala, 
+			s_ternak.suhu_berkala, 
+			s_ternak.tanggal_lahir, 
+			timestampdiff(month, s_ternak.tanggal_lahir, curdate()) AS umur , 
+			s_ternak.tanggal_masuk, s_ternak.id_induk, s_ternak.id_pejantan, 
+			s_ternak.status_sehat, 
+			s_ternak.fase_pemeliharaan,
+            d_pakan.nama_pakan,
+			s_ternak.tanggal_keluar, 
+			s_ternak.status_keluar 
+			FROM s_ternak
+			LEFT JOIN d_varietas
+			ON s_ternak.id_varietas=d_varietas.id_varietas
+            LEFT JOIN d_pakan
+            ON s_ternak.id_pakan=d_pakan.id_pakan
+            WHERE s_ternak.id_users=?`,
+			params: [id_users]
+		}
+
+		return mysql.query(sql.query, sql.params)
+			.then( data => {
+				return {
+					status: true,
+					data
+				}
+			})
+			.catch(error => {
+				if(debug){
+					console.error('getDetailternakusers Error:', error);
+				}
+
+				return {
+					status: false,
+					error,
+				};
+			});
+	};
+
+
+	getDetailternakrfid(rf_id){
+		const sql = {
+			query: `
+			SELECT 
+        	s_ternak.id_users,
+			s_ternak.id_ternak,
+            s_ternak.rf_id,
+			s_ternak.jenis_kelamin,
+			d_varietas.nama_varietas , 
+			s_ternak.berat_berkala, 
+			s_ternak.suhu_berkala, 
+			s_ternak.tanggal_lahir, 
+			timestampdiff(month, s_ternak.tanggal_lahir, curdate()) AS umur , 
+			s_ternak.tanggal_masuk, s_ternak.id_induk, s_ternak.id_pejantan, 
+			s_ternak.status_sehat, 
+			s_ternak.fase_pemeliharaan,
+            d_pakan.nama_pakan,
+			s_ternak.tanggal_keluar, 
+			s_ternak.status_keluar 
+			FROM s_ternak
+			LEFT JOIN d_varietas
+			ON s_ternak.id_varietas=d_varietas.id_varietas
+            LEFT JOIN d_pakan
+            ON s_ternak.id_pakan=d_pakan.id_pakan
+            WHERE s_ternak.rf_id=?`,
+			params: [rf_id]
+		}
+
+		return mysql.query(sql.query, sql.params)
+			.then( data => {
+				return {
+					status: true,
+					data
+				}
+			})
+			.catch(error => {
+				if(debug){
+					console.error('getDetailternakrfid Error:', error);
+				}
+
+				return {
+					status: false,
+					error,
+				};
+			});
+	};
+	
+
+
+
+
 	listternak(options = {}){
 		const { id_ternak } = options
 		const sql = {
 				query: `
-				SELECT
-					ternak.id_ternak,
-					ternak.jenis_kelamin,
-					ternak.berat_berkala,
-					ternak.suhu_berkala,
-					ternak.tanggal_lahir,
-					IF(ternak.usia > 12, ternak.usia / 12, ternak.usia) usia,
-					IF(ternak.usia > 12, 0, 1) isMonth,
-					ternak.tanggal_masuk,
-					ternak.fase_pemeliharaan
-				FROM (
-					SELECT
-						trnk.id_ternak,
-						trnk.jenis_kelamin,
-						trnk.berat_berkala,
-						trnk.suhu_berkala,
-						trnk.tanggal_lahir,
-						(SELECT TIMESTAMPDIFF(MONTH, trnk.tanggal_lahir, CURRENT_DATE())) usia,
-						trnk.tanggal_masuk,
-						trnk.fase_pemeliharaan
-					FROM s_ternak trnk
-				) ternak`,
+				SELECT 
+        	s_ternak.id_users,
+			s_ternak.id_ternak,
+			s_ternak.rf_id,
+			s_ternak.jenis_kelamin,
+			d_varietas.nama_varietas , 
+			s_ternak.berat_berkala, 
+			s_ternak.suhu_berkala, 
+			s_ternak.tanggal_lahir, 
+			timestampdiff(month, s_ternak.tanggal_lahir, curdate()) AS umur , 
+			s_ternak.tanggal_masuk, s_ternak.id_induk, s_ternak.id_pejantan, 
+			s_ternak.status_sehat, 
+			s_ternak.fase_pemeliharaan,
+            d_pakan.nama_pakan,
+			s_ternak.tanggal_keluar, 
+			s_ternak.status_keluar 
+			FROM s_ternak
+			LEFT JOIN d_varietas
+			ON s_ternak.id_varietas=d_varietas.id_varietas
+            LEFT JOIN d_pakan
+            ON s_ternak.id_pakan=d_pakan.id_pakan
+			WHERE 1`,
 				params: [],
 			};
 
 		if (id_ternak) {
-			sql.query += ` AND emp.id_ternak = ?`;
+			sql.query += ` AND s_ternak.id_ternak = ?`;
 			sql.params.push(id_ternak);
 		}
 
-		sql.query += ` ORDER BY emp.id_ternak DESC`
+		sql.query += ` ORDER BY s_ternak.id_ternak DESC`
 
 		return mysql.query(sql.query, sql.params)
 			.then(async data => {
@@ -201,6 +276,7 @@ class _ternak{
 
 				for (let key in data) {
 					tmp.push({
+						id_users: data[key].id_users,
 						id_ternak: data[key].id_ternak,
 						rf_id: data[key].rf_id,
 						jenis_kelamin: data[key].jenis_kelamin,
@@ -208,10 +284,13 @@ class _ternak{
 						berat_berkala: data[key].berat_berkala,
 						suhu_berkala: data[key].suhu_berkala,
 						tanggal_lahir: data[key].tanggal_lahir,
+						umur: data[key].umur,
 						tanggal_masuk: data[key].tanggal_masuk,
+						status_sehat: data[key].status_sehat,
+						fase_pemeliharaan: data[key].fase_pemeliharaan,
+						nama_pakan: data[key].nama_pakan,
 						id_induk: data[key].id_induk,
 						id_pejantan: data[key].id_pejantan,
-						fase_pemeliharaan: data[key].fase_pemeliharaan,
 					})
 				}
 

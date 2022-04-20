@@ -56,7 +56,7 @@ class _kesehatan{
 
 	addkesehatan(data){
 		const sql = {
-			query: `INSERT INTO d_kesehatan(id_kesehatan, id_ternak, penyakit, tgl_sakit ) VALUES (?, ?, ?, ?)`,
+			query: `INSERT INTO d_kesehatan(id_kesehatan, id_ternak, penyakit, tgl_sakit ) VALUES (?, ?, ?, current_timestamp)`,
 			params: [data.id_kesehatan, data.id_ternak, data.penyakit, data.tgl_sakit ]
 		}
 

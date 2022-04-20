@@ -21,6 +21,22 @@ router.get('/:id_ternak', async function (req, res, next) {
 	helper.sendResponse(res, detail)
 });
 
+
+router.get('/users/:id_users', async function (req, res, next) {
+	const detail = await m$ternak.getDetailternakusers(req.params.id_users)
+	helper.sendResponse(res, detail)
+});
+
+router.get('/rfid/(:rf_id)', async function (req, res, next) {
+	const detail = await m$ternak.getDetailternakrfid(req.params.rf_id)
+	helper.sendResponse(res, detail)
+});
+
+// router.post('/rfid/:rf_id', async function (req, res, next) {
+// 	const detail = await m$ternak.getDetailternakrfid(req.params.rf_id)
+// 	helper.sendResponse(res, detail)
+// });
+
 router.put('/:id_ternak', async function (req, res, next) {
 	// const update = await m$ternak.updateternak({
 	// 	name: req.body.name,
