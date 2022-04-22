@@ -64,10 +64,10 @@ const jwt = {
 const menuList = function (groupId, parentId) {
 	const sql = {
 		query: `SELECT
-				aa.menuId id,
-				aa.menuName title,
-				aa.menuIcon icon,
-				aa.menuLink link,
+				aa.id_mitra,
+				aa.nama_mitra,
+				aa.username,
+				aa.email,
 				aa.menuGroup,
 				aa.menuOrder,
 				aa.menuParentMenuId parentId
@@ -546,12 +546,16 @@ class __session {
 				username = ?,
 				password = ?,
 				email= ?,
+				no_hp= ?,
+				alamat= ?,
 				level = ?`,
 			params: [
 					data.nama_mitra,
 					data.username,
 					hash.sha256(data.password),
 					data.email,
+					data.no_hp,
+					data.alamat,
 					data.level
 				],
 		};
