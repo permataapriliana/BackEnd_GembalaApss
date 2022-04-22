@@ -37,7 +37,7 @@ router.get('/rfid/(:rf_id)', async function (req, res, next) {
 // 	helper.sendResponse(res, detail)
 // });
 
-router.put('/:id_ternak', async function (req, res, next) {
+router.put('/(:id_ternak)', async function (req, res, next) {
 	// const update = await m$ternak.updateternak({
 	// 	name: req.body.name,
 	// 	date_birth: req.body.date_birth, 
